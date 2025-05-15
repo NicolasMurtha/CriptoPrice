@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Extensão para visualizar o preço das criptomoedas em tempo real.">
+  <meta name="author" content="Nicolas Murtha">
+  <meta name="keywords" content="criptomoedas, bitcoin, ethereum, preço, extensão, chrome">
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <meta name="google" content="notranslate">
+  <meta name="language" content="pt-BR">
+  <meta name="revisit-after" content="1 days">
+  <meta name="rating" content="general">
+  <meta name="copyright" content="Nicolas Murtha">
+
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+
+    <div class="header">
+      <h1>CriptoPrice</h1>
+      <button id="botaoTrocar" class="botaoTrocar" title="Trocar moeda">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20">
+          <path d="M0 0h24v24H0V0z" fill="none"/>
+          <path d="M4 7h13l-3.5-3.5 1.42-1.42L21.84 8l-6.92 5.92-1.42-1.42L17 9H4V7zm16 10H7l3.5 3.5-1.42 1.42L2.16 16l6.92-5.92 1.42 1.42L7 15h13v2z"/>
+        </svg>
+      </button>
+    </div>
+
+    
+
+    <div class="crypto" data-moeda="usd">
+      <h3>Ethereum (USD)</h3>
+      <p id="preco-ethereum-usd">Carregando...</p>
+    </div>
+
+    <div class="crypto" data-moeda="brl">
+      <h3>Ethereum (BRL)</h3>
+      <p id="preco-ethereum-brl">Carregando...</p>
+    </div>
+
+    <div class="crypto" data-moeda="usd">
+      <h3>Bitcoin (USD)</h3>
+      <p id="preco-bitcoin-usd">Carregando...</p>
+    </div>
+
+    <div class="crypto" data-moeda="brl">
+      <h3>Bitcoin (BRL)</h3>
+      <p id="preco-bitcoin-brl">Carregando...</p>
+    </div>
+    <script src="popup.js"></script>
+
+    <div class="coingecko-credit">
+      <span>Price data provided by</span>
+      <a href="https://www.coingecko.com" target="_blank" rel="noopener noreferrer"><img src="gecko.svg" alt="CoinGecko Logo" class="logo"></a>
+    </div>
+
+  </body>
+
+</html>
