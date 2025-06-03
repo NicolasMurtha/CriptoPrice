@@ -4,7 +4,7 @@
 Uma extensão leve de navegador que exibe o preço de criptomoedas em tempo real usando a API da [CoinGecko](https://www.coingecko.com/).  
 👀 Ideal para quem quer acompanhar rapidamente o valor de **Bitcoin**, **Ethereum** e outras moedas em **BRL** ou **USD**.
 
-Agora disponível oficialmente na Chrome Web Store
+🚀🚀🚀 Agora disponível oficialmente na Chrome Web Store!!! 🚀🚀🚀
 https://chromewebstore.google.com/detail/criptoprice/jbagdmhabgekcnichjjpbfneicoabjmh
 
 ---
