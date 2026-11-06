@@ -1,0 +1,58 @@
+name: Release
+
+# Dispara ao enviar uma tag de versão, por exemplo:
+#   git tag v1.3.0 && git push origin v1.3.0
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  CWS_EXTENSION_ID: jbagdmhabgekcnichjjpbfneicoabjmh
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Conferir versão da tag com o manifest
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          MANIFEST=$(jq -r '.version' manifest.json)
+          if [ "$TAG" != "$MANIFEST" ]; then
+            echo "::error::A tag ($GITHUB_REF_NAME) não bate com a versão do manifest.json ($MANIFEST)"
+            exit 1
+          fi
+
+      - name: Gerar .zip
+        id: build
+        run: echo "zip=$(scripts/build.sh)" >> "$GITHUB_OUTPUT"
+
+      - name: Criar Release no GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" "${{ steps.build.outputs.zip }}" \
+            --title "CriptoPrice $GITHUB_REF_NAME" \
+            --generate-notes
+
+      - name: Publicar na Chrome Web Store
+        env:
+          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+          CWS_PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
+        run: |
+          if [ -z "$CWS_CLIENT_ID" ] || [ -z "$CWS_CLIENT_SECRET" ] || [ -z "$CWS_REFRESH_TOKEN" ] || [ -z "$CWS_PUBLISHER_ID" ]; then
+            echo "::warning::Secrets da Chrome Web Store não configurados. A Release foi criada, mas o envio para a loja foi pulado. Veja docs/PUBLICACAO.md."
+            exit 0
+          fi
+          scripts/publish.sh "${{ steps.build.outputs.zip }}"
