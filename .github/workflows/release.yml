@@ -44,15 +44,26 @@ jobs:
             --title "CriptoPrice $GITHUB_REF_NAME" \
             --generate-notes
 
-      - name: Publicar na Chrome Web Store
+      - name: Verificar secrets da Chrome Web Store
+        id: secrets
         env:
-          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
-          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
-          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+          CWS_SERVICE_ACCOUNT_KEY: ${{ secrets.CWS_SERVICE_ACCOUNT_KEY }}
           CWS_PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
         run: |
-          if [ -z "$CWS_CLIENT_ID" ] || [ -z "$CWS_CLIENT_SECRET" ] || [ -z "$CWS_REFRESH_TOKEN" ] || [ -z "$CWS_PUBLISHER_ID" ]; then
+          if [ -n "$CWS_SERVICE_ACCOUNT_KEY" ] && [ -n "$CWS_PUBLISHER_ID" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
             echo "::warning::Secrets da Chrome Web Store não configurados. A Release foi criada, mas o envio para a loja foi pulado. Veja docs/PUBLICACAO.md."
-            exit 0
           fi
+
+      - name: Publicar na Chrome Web Store
+        if: steps.secrets.outputs.ok == 'true'
+        env:
+          CWS_SERVICE_ACCOUNT_KEY: ${{ secrets.CWS_SERVICE_ACCOUNT_KEY }}
+          CWS_PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
+        run: |
+          CWS_ACCESS_TOKEN=$(scripts/sa-token.sh)
+          echo "::add-mask::$CWS_ACCESS_TOKEN"
+          export CWS_ACCESS_TOKEN
           scripts/publish.sh "${{ steps.build.outputs.zip }}"

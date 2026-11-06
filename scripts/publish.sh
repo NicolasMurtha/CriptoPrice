@@ -3,19 +3,20 @@
 # Uso: scripts/publish.sh dist/CriptoPrice-<versão>.zip
 #
 # Variáveis de ambiente obrigatórias:
-#   CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN  credenciais OAuth
-#   CWS_PUBLISHER_ID                                     ID de publisher (Developer Dashboard > Conta)
-#   CWS_EXTENSION_ID                                     ID da extensão na loja
+#   CWS_ACCESS_TOKEN  token de acesso da conta de serviço, com o escopo
+#                     https://www.googleapis.com/auth/chromewebstore
+#                     (gerado por scripts/sa-token.sh a partir da chave da conta de serviço)
+#   CWS_PUBLISHER_ID  ID de publisher (Developer Dashboard > Conta)
+#   CWS_EXTENSION_ID  ID da extensão na loja
 set -euo pipefail
 
 ZIP="${1:?Informe o caminho do .zip}"
 [[ -f "$ZIP" ]] || { echo "Erro: arquivo '$ZIP' não encontrado" >&2; exit 1; }
 
-for var in CWS_CLIENT_ID CWS_CLIENT_SECRET CWS_REFRESH_TOKEN CWS_PUBLISHER_ID CWS_EXTENSION_ID; do
+for var in CWS_ACCESS_TOKEN CWS_PUBLISHER_ID CWS_EXTENSION_ID; do
   [[ -n "${!var:-}" ]] || { echo "Erro: variável $var não definida" >&2; exit 1; }
 done
 
-TOKEN_URL="${CWS_TOKEN_URL:-https://oauth2.googleapis.com/token}"
 API_BASE="${CWS_API_BASE:-https://chromewebstore.googleapis.com}"
 ITEM="publishers/${CWS_PUBLISHER_ID}/items/${CWS_EXTENSION_ID}"
 
@@ -35,15 +36,7 @@ requisicao() {
   rm -f "$saida"
 }
 
-echo "==> Obtendo token de acesso"
-ACCESS_TOKEN=$(requisicao -X POST "$TOKEN_URL" \
-  --data-urlencode "client_id=${CWS_CLIENT_ID}" \
-  --data-urlencode "client_secret=${CWS_CLIENT_SECRET}" \
-  --data-urlencode "refresh_token=${CWS_REFRESH_TOKEN}" \
-  --data-urlencode "grant_type=refresh_token" | jq -r '.access_token')
-[[ -n "$ACCESS_TOKEN" && "$ACCESS_TOKEN" != "null" ]] || { echo "Erro: resposta sem access_token" >&2; exit 1; }
-[[ -n "${GITHUB_ACTIONS:-}" ]] && echo "::add-mask::${ACCESS_TOKEN}"
-AUTH=(-H "Authorization: Bearer ${ACCESS_TOKEN}")
+AUTH=(-H "Authorization: Bearer ${CWS_ACCESS_TOKEN}")
 
 echo "==> Enviando $ZIP"
 UPLOAD=$(requisicao -X POST "${API_BASE}/upload/v2/${ITEM}:upload" "${AUTH[@]}" \

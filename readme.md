@@ -77,7 +77,7 @@ CriptoPrice/
 ├── icon.png        # Ícone original (256×256)
 ├── icons/          # Ícones redimensionados (16, 32, 48, 128 px)
 ├── gecko.svg       # Logo da CoinGecko (crédito obrigatório)
-├── scripts/        # build.sh (gera o .zip) e publish.sh (envia para a loja)
+├── scripts/        # build.sh (gera o .zip), sa-token.sh (autenticação) e publish.sh (envio para a loja)
 ├── docs/           # Guia de publicação
 ├── .github/        # Workflow de release
 └── LICENSE

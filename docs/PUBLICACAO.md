@@ -30,14 +30,14 @@ Para gerar o `.zip` localmente, sem publicar: `scripts/build.sh` (o arquivo vai 
 
 ## Configuração inicial (uma vez só)
 
-Você vai precisar de 4 valores, que serão cadastrados como secrets no GitHub:
+A autenticação usa uma **conta de serviço** do Google Cloud. Não é preciso configurar tela de consentimento OAuth, ter domínio nem política de privacidade, e a credencial não expira.
+
+Você vai cadastrar 2 secrets no GitHub:
 
 | Secret | O que é |
 |---|---|
 | `CWS_PUBLISHER_ID` | ID de publisher da sua conta de desenvolvedor |
-| `CWS_CLIENT_ID` | ID do cliente OAuth |
-| `CWS_CLIENT_SECRET` | Chave secreta do cliente OAuth |
-| `CWS_REFRESH_TOKEN` | Token que permite ao workflow agir em nome da sua conta |
+| `CWS_SERVICE_ACCOUNT_KEY` | Conteúdo completo do arquivo de chave JSON da conta de serviço |
 
 O ID da extensão (`jbagdmhabgekcnichjjpbfneicoabjmh`) já está no workflow.
 
@@ -50,32 +50,34 @@ No [Developer Dashboard](https://chrome.google.com/webstore/devconsole), abra **
 1. Acesse o [Google Cloud Console](https://console.cloud.google.com/) e crie um projeto (ex.: `criptoprice-publish`).
 2. Em **APIs e serviços → Biblioteca**, procure **Chrome Web Store API** e clique em **Ativar**.
 
-### 3. Tela de consentimento OAuth
+### 3. Conta de serviço e chave
 
-1. Em **APIs e serviços → Tela de consentimento OAuth** (ou **Google Auth Platform**), configure o app como **Externo**, com seu e-mail como contato.
-2. Adicione seu e-mail como usuário de teste.
-3. **Importante:** depois de configurar, mude o status de publicação para **Em produção**. Enquanto o app estiver em **Teste**, o refresh token expira em 7 dias e o workflow começa a falhar. Não é preciso passar por verificação do Google para uso próprio.
+1. No mesmo projeto, vá em **IAM e administrador → Contas de serviço → Criar conta de serviço**.
+2. Dê um nome (ex.: `criptoprice-publish`) e conclua. Não é preciso atribuir nenhum papel.
+3. Abra a conta criada e copie o **e-mail** dela (algo como `criptoprice-publish@criptoprice-publish.iam.gserviceaccount.com`).
+4. Na aba **Chaves**, clique em **Adicionar chave → Criar nova chave → JSON**. Um arquivo `.json` será baixado. Guarde-o com cuidado: ele dá acesso para publicar a extensão.
 
-### 4. Cliente OAuth
+### 4. Dar acesso à conta de serviço na loja
 
-1. Em **APIs e serviços → Credenciais**, clique em **Criar credenciais → ID do cliente OAuth**.
-2. Tipo: **Aplicativo da Web**.
-3. Em **URIs de redirecionamento autorizados**, adicione `https://developers.google.com/oauthplayground`.
-4. Guarde o **ID do cliente** e a **chave secreta do cliente**.
+No [Developer Dashboard](https://chrome.google.com/webstore/devconsole), em **Conta**, adicione o **e-mail da conta de serviço** no campo de acesso à API. Só é permitida uma conta de serviço por publisher.
 
-### 5. Refresh token
+### 5. Secrets no GitHub
 
-1. Abra o [OAuth 2.0 Playground](https://developers.google.com/oauthplayground).
-2. Clique na engrenagem ⚙️ (canto superior direito), marque **Use your own OAuth credentials** e cole o ID e a chave secreta do cliente.
-3. No campo **Input your own scopes**, digite `https://www.googleapis.com/auth/chromewebstore` e clique em **Authorize APIs**.
-4. Entre com a **mesma conta Google da Chrome Web Store** e autorize.
-5. Clique em **Exchange authorization code for tokens** e copie o **Refresh token**.
+No repositório, vá em **Settings → Secrets and variables → Actions → New repository secret** e crie:
 
-### 6. Secrets no GitHub
+- `CWS_PUBLISHER_ID`: o ID do passo 1;
+- `CWS_SERVICE_ACCOUNT_KEY`: abra o arquivo `.json` do passo 3 num editor de texto e cole **todo** o conteúdo.
 
-No repositório, vá em **Settings → Secrets and variables → Actions → New repository secret** e crie os 4 secrets da tabela acima.
+Depois disso, apague o arquivo `.json` do seu computador (ou guarde num gerenciador de senhas).
 
-> Nunca coloque esses valores em arquivos do repositório nem os compartilhe em chats.
+> Nunca coloque a chave em arquivos do repositório nem a compartilhe em chats. Se ela vazar, apague-a na aba **Chaves** da conta de serviço e crie outra.
+
+### Publicar manualmente pelo terminal (opcional)
+
+```bash
+export CWS_ACCESS_TOKEN=$(scripts/sa-token.sh caminho/da/chave.json)
+CWS_PUBLISHER_ID=<seu-id> CWS_EXTENSION_ID=jbagdmhabgekcnichjjpbfneicoabjmh scripts/publish.sh "$(scripts/build.sh)"
+```
 
 ---
 
@@ -84,9 +86,9 @@ No repositório, vá em **Settings → Secrets and variables → Actions → New
 | Erro no workflow | Causa provável |
 |---|---|
 | `A tag não bate com a versão do manifest.json` | Esqueceu de alterar a `version` antes de criar a tag. Apague a tag (`git push --delete origin vX.Y.Z` e `git tag -d vX.Y.Z`), corrija e crie de novo. |
-| `HTTP 400` com `invalid_grant` ao obter o token | Refresh token expirado ou revogado (veja o passo 3). Gere outro no passo 5. |
-| `HTTP 403` no upload | A conta que gerou o token não é dona da extensão, ou a API não foi ativada no projeto. |
+| `Erro ao obter token` com `invalid_grant` | Chave apagada/inválida, ou o secret `CWS_SERVICE_ACCOUNT_KEY` foi colado incompleto. Crie uma nova chave e cole o JSON inteiro. |
+| `HTTP 403` no upload | O e-mail da conta de serviço não foi adicionado no Developer Dashboard (passo 4), ou a Chrome Web Store API não foi ativada no projeto (passo 2). |
 | `HTTP 400` no upload citando a versão | A versão do `manifest.json` precisa ser maior que a publicada na loja. |
 | Erro ao publicar após o upload | A visibilidade foi alterada manualmente no painel. Faça uma publicação manual uma vez e as próximas voltam a funcionar pela API. |
 
-Referência: [Use the Chrome Web Store API](https://developer.chrome.com/docs/webstore/using-api).
+Referências: [Use the Chrome Web Store API](https://developer.chrome.com/docs/webstore/using-api) · [Use a service account with the Chrome Web Store API](https://developer.chrome.com/docs/webstore/service-accounts).
