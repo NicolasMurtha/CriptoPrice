@@ -47,13 +47,7 @@ Uma extensão leve de navegador que mostra o preço e a variação em 24h do **B
 
 Depois de alterar algum arquivo, clique no ícone de recarregar da extensão em `chrome://extensions` e reabra o popup.
 
-Para gerar o pacote `.zip` da loja localmente: `scripts/build.sh` (o arquivo vai para `dist/`).
-
----
-
-## 🚢 Publicação
-
-Novas versões são publicadas automaticamente na Chrome Web Store por GitHub Actions ao enviar uma tag (`git tag v1.3.0 && git push origin v1.3.0`). Veja o passo a passo e a configuração inicial em [docs/PUBLICACAO.md](docs/PUBLICACAO.md).
+Para gerar o pacote `.zip` da Chrome Web Store, rode `scripts/build.sh` (o arquivo vai para `dist/`) e envie-o pelo [Developer Dashboard](https://chrome.google.com/webstore/devconsole).
 
 ---
 
@@ -77,9 +71,7 @@ CriptoPrice/
 ├── icon.png        # Ícone original (256×256)
 ├── icons/          # Ícones redimensionados (16, 32, 48, 128 px)
 ├── gecko.svg       # Logo da CoinGecko (crédito obrigatório)
-├── scripts/        # build.sh (gera o .zip), sa-token.sh (autenticação) e publish.sh (envio para a loja)
-├── docs/           # Guia de publicação
-├── .github/        # Workflow de release
+├── scripts/        # build.sh: gera o .zip para a Chrome Web Store
 └── LICENSE
 ```
 
