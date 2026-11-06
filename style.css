@@ -8,7 +8,7 @@ body {
   background-color: #ffffff;
   font-family: Arial, sans-serif;
   padding: 15px;
-  width: 250px;
+  width: 260px;
 }
 
 .header {
@@ -22,7 +22,12 @@ body {
   font-size: 20px;
 }
 
-.botaoTrocar {
+.acoes {
+  display: flex;
+  gap: 6px;
+}
+
+.botao {
   background-color: #eee;
   border: none;
   border-radius: 8px;
@@ -33,13 +38,28 @@ body {
   gap: 4px;
 }
 
-.botaoTrocar:hover {
+.botao:hover:not(:disabled) {
   background-color: #e0e0e0;
 }
 
-.botaoTrocar:focus-visible {
+.botao:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.botao:focus-visible {
   outline: 2px solid #4a90e2;
   outline-offset: 2px;
+}
+
+.girando .icone-atualizar {
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .moeda-atual {
@@ -48,19 +68,44 @@ body {
 }
 
 div.crypto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #f0f0f0;
   padding: 10px;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-h3 {
-  font-size: 16px;
-  margin-bottom: 5px;
+.crypto-info h3 {
+  font-size: 15px;
 }
 
-p {
+.simbolo {
+  font-size: 11px;
+  color: #5a6570;
+}
+
+.crypto-valores {
+  text-align: right;
+}
+
+.preco {
   font-size: 14px;
+  font-weight: 600;
+}
+
+.variacao {
+  font-size: 11px;
+  color: #5a6570;
+}
+
+.variacao.alta {
+  color: #1e8e3e;
+}
+
+.variacao.baixa {
+  color: #d93025;
 }
 
 .erro {
@@ -69,7 +114,13 @@ p {
   font-size: 12px;
   padding: 8px 10px;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+}
+
+.atualizado {
+  font-size: 11px;
+  color: #5a6570;
+  margin-bottom: 4px;
 }
 
 .coingecko-credit {

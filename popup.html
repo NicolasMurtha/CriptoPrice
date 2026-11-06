@@ -10,27 +10,25 @@
   <body>
     <header class="header">
       <h1>CriptoPrice</h1>
-      <button id="botaoTrocar" class="botaoTrocar" type="button" title="Trocar moeda" aria-label="Trocar moeda">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" aria-hidden="true">
-          <path d="M0 0h24v24H0V0z" fill="none"/>
-          <path d="M4 7h13l-3.5-3.5 1.42-1.42L21.84 8l-6.92 5.92-1.42-1.42L17 9H4V7zm16 10H7l3.5 3.5-1.42 1.42L2.16 16l6.92-5.92 1.42 1.42L7 15h13v2z"/>
-        </svg>
-        <span id="moeda-atual" class="moeda-atual">BRL</span>
-      </button>
+      <div class="acoes">
+        <button id="botaoAtualizar" class="botao" type="button" title="Atualizar preços" aria-label="Atualizar preços">
+          <svg class="icone-atualizar" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" aria-hidden="true">
+            <path d="M17.65 6.35A7.958 7.958 0 0 0 12 4a8 8 0 1 0 7.73 10h-2.08A5.99 5.99 0 0 1 12 18a6 6 0 1 1 0-12c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+        </button>
+        <button id="botaoTrocar" class="botao" type="button" title="Trocar moeda" aria-label="Trocar moeda">
+          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" aria-hidden="true">
+            <path d="M4 7h13l-3.5-3.5 1.42-1.42L21.84 8l-6.92 5.92-1.42-1.42L17 9H4V7zm16 10H7l3.5 3.5-1.42 1.42L2.16 16l6.92-5.92 1.42 1.42L7 15h13v2z"/>
+          </svg>
+          <span id="moeda-atual" class="moeda-atual">BRL</span>
+        </button>
+      </div>
     </header>
 
     <main aria-live="polite">
-      <div class="crypto">
-        <h3>Bitcoin</h3>
-        <p id="preco-bitcoin">Carregando...</p>
-      </div>
-
-      <div class="crypto">
-        <h3>Ethereum</h3>
-        <p id="preco-ethereum">Carregando...</p>
-      </div>
-
+      <div id="lista"></div>
       <p id="erro" class="erro" role="alert" hidden></p>
+      <p id="atualizado" class="atualizado"></p>
     </main>
 
     <footer class="coingecko-credit">
