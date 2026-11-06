@@ -1,68 +1,14 @@
-.coingecko-credit {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: sans-serif;
-  font-size: 16px;
-  color: #5a6570;
-  padding: 10px;
-}
-
-.coingecko-credit .logo {
-  height: 24px;
-}
-
-.coingecko-credit .bold {
-  font-weight: 600;
-  color: #000;
-}
-
-.coingecko-credit .api-label {
-  background-color: #ccf37e;
-  color: #000;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    background-color: #ffffff;
-    font-family: Arial, sans-serif;
-    padding: 15px;
-    width: 250px;
-}
-
-h1 {
-    font-size: 20px;
-    margin-bottom: 15px;
-}
-
-div.crypto {
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-h3 {
-    font-size: 16px;
-    margin-bottom: 5px;
-}
-
-p {
-    font-size: 14px;
-}
-
-span {
-    font-size: 12px;
-    font-weight: 200;
-    color: rgb(167, 167, 167);
+  background-color: #ffffff;
+  font-family: Arial, sans-serif;
+  padding: 15px;
+  width: 250px;
 }
 
 .header {
@@ -74,16 +20,68 @@ span {
 
 .header h1 {
   font-size: 20px;
-  margin: 0;
 }
 
 .botaoTrocar {
   background-color: #eee;
   border: none;
   border-radius: 8px;
-  padding: 6px;
+  padding: 6px 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 4px;
+}
+
+.botaoTrocar:hover {
+  background-color: #e0e0e0;
+}
+
+.botaoTrocar:focus-visible {
+  outline: 2px solid #4a90e2;
+  outline-offset: 2px;
+}
+
+.moeda-atual {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+div.crypto {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+p {
+  font-size: 14px;
+}
+
+.erro {
+  background-color: #fdecea;
+  color: #b3261e;
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.coingecko-credit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #5a6570;
+  padding-top: 5px;
+}
+
+.coingecko-credit .logo {
+  height: 24px;
+  display: block;
 }

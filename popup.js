@@ -1,66 +1,91 @@
-async function getPreco(cripto, moeda) {
+const API_URL = "https://api.coingecko.com/api/v3/simple/price";
+const CRIPTOS = ["bitcoin", "ethereum"];
+const MOEDAS = ["brl", "usd"];
+const CHAVE_MOEDA = "criptoprice:moeda";
+
+const formatadores = {
+  brl: new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }),
+  usd: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }),
+};
+
+let precos = null;
+let moedaAtual = lerMoedaSalva();
+
+function lerMoedaSalva() {
   try {
-    const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cripto}&vs_currencies=${moeda}`);
-    const data = await response.json();
-    const preco = data[cripto][moeda];
-      
-    // Formata e insere no elemento com ID `preco-cripto-moeda`
-    const idElemento = `preco-${cripto}-${moeda}`;
-    const elemento = document.getElementById(idElemento);
-    if (elemento) {
-      const prefixo = moeda === "brl" ? "R$" : moeda === "usd" ? "$" : `${moeda.toUpperCase()} `;
-      elemento.textContent = `${prefixo} ${preco.toLocaleString("pt-BR")}`;
-    }
-  } catch (error) {
-    console.error(`Erro ao carregar ${cripto}/${moeda}:`, error);
+    const salva = localStorage.getItem(CHAVE_MOEDA);
+    return MOEDAS.includes(salva) ? salva : "brl";
+  } catch {
+    return "brl";
   }
 }
 
+function salvarMoeda(moeda) {
+  try {
+    localStorage.setItem(CHAVE_MOEDA, moeda);
+  } catch {
+    // Armazenamento indisponível: a escolha só não será lembrada.
+  }
+}
 
-// Criptos suportadas
-const criptos = ["bitcoin", "ethereum"];
-const moedas = ["brl", "usd"];
+async function buscarPrecos() {
+  const params = new URLSearchParams({
+    ids: CRIPTOS.join(","),
+    vs_currencies: MOEDAS.join(","),
+  });
+  const response = await fetch(`${API_URL}?${params}`);
 
-// Carregar todos os preços inicialmente
-criptos.forEach((cripto) => {
-  moedas.forEach((moeda) => getPreco(cripto, moeda));
-});
+  if (response.status === 429) {
+    throw new Error("Limite de requisições atingido. Tente novamente em instantes.");
+  }
+  if (!response.ok) {
+    throw new Error(`Erro ao consultar a CoinGecko (HTTP ${response.status}).`);
+  }
+  return response.json();
+}
 
-let moedaAtual = "brl";
+function renderizar() {
+  document.getElementById("moeda-atual").textContent = moedaAtual.toUpperCase();
 
-// Trocar a exibição de moeda
-document.getElementById("botaoTrocar").addEventListener("click", () => {
-  moedaAtual = moedaAtual === "brl" ? "usd" : "brl";
-
-  // Mostrar só os elementos com data-moeda = moedaAtual
-  document.querySelectorAll(".crypto").forEach((el) => {
-    if (el.getAttribute("data-moeda") === moedaAtual) {
-      el.style.display = "block";
-    } else {
-      el.style.display = "none";
+  CRIPTOS.forEach((cripto) => {
+    const elemento = document.getElementById(`preco-${cripto}`);
+    const preco = precos?.[cripto]?.[moedaAtual];
+    if (typeof preco === "number") {
+      elemento.textContent = formatadores[moedaAtual].format(preco);
+    } else if (precos) {
+      elemento.textContent = "Indisponível";
     }
   });
-});
+}
 
-// Mostrar só BRL por padrão
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".crypto").forEach((el) => {
-    el.style.display = el.getAttribute("data-moeda") === "brl" ? "block" : "none";
+function mostrarErro(mensagem) {
+  const erro = document.getElementById("erro");
+  erro.textContent = mensagem;
+  erro.hidden = false;
+  CRIPTOS.forEach((cripto) => {
+    document.getElementById(`preco-${cripto}`).textContent = "—";
   });
+}
+
+async function carregar() {
+  try {
+    precos = await buscarPrecos();
+    renderizar();
+  } catch (error) {
+    console.error("Erro ao carregar preços:", error);
+    const mensagem =
+      error instanceof TypeError
+        ? "Sem conexão com a CoinGecko. Verifique sua internet."
+        : error.message;
+    mostrarErro(mensagem);
+  }
+}
+
+document.getElementById("botaoTrocar").addEventListener("click", () => {
+  moedaAtual = moedaAtual === "brl" ? "usd" : "brl";
+  salvarMoeda(moedaAtual);
+  renderizar();
 });
 
-(async () => {
-  await getPreco("bitcoin", "usd");
-})();
-
-(async () => {
-  await getPreco("bitcoin", "brl");
-})();
-
-(async () => {
-  await getPreco("ethereum", "usd");
-})();
-
-(async () => {
-  await getPreco("ethereum", "brl");
-})();
+renderizar();
+carregar();
