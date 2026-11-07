@@ -1,0 +1,86 @@
+{
+  "extName": {
+    "message": "CriptoPrice"
+  },
+  "extDescription": {
+    "message": "Cotação de Bitcoin, Ethereum e outras criptomoedas em reais ou dólares, com variação em 24h e gráfico de 7 dias."
+  },
+  "btnRefresh": {
+    "message": "Atualizar preços"
+  },
+  "btnCurrency": {
+    "message": "Trocar moeda"
+  },
+  "btnSettings": {
+    "message": "Escolher moedas"
+  },
+  "loading": {
+    "message": "Carregando..."
+  },
+  "unavailable": {
+    "message": "Indisponível"
+  },
+  "change24h": {
+    "message": "Variação em 24h"
+  },
+  "trend7d": {
+    "message": "Últimos 7 dias"
+  },
+  "updatedAt": {
+    "message": "Atualizado às $time$",
+    "placeholders": {
+      "time": {
+        "content": "$1"
+      }
+    }
+  },
+  "updatedAtDate": {
+    "message": "Atualizado em $date$ às $time$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      },
+      "time": {
+        "content": "$2"
+      }
+    }
+  },
+  "errRateLimit": {
+    "message": "Limite de requisições da CoinGecko atingido. Tente novamente em instantes."
+  },
+  "errHttp": {
+    "message": "Erro ao consultar a CoinGecko (HTTP $status$).",
+    "placeholders": {
+      "status": {
+        "content": "$1"
+      }
+    }
+  },
+  "errNetwork": {
+    "message": "Sem conexão com a CoinGecko. Verifique sua internet."
+  },
+  "staleSuffix": {
+    "message": "Exibindo os últimos preços salvos."
+  },
+  "waitRefresh": {
+    "message": "Aguarde alguns segundos para atualizar de novo."
+  },
+  "settingsTitle": {
+    "message": "Escolha as moedas"
+  },
+  "settingsHint": {
+    "message": "Selecione pelo menos uma."
+  },
+  "settingsDone": {
+    "message": "Concluído"
+  },
+  "credit": {
+    "message": "Dados fornecidos por"
+  },
+  "contact": {
+    "message": "Contato"
+  },
+  "contactTitle": {
+    "message": "Enviar e-mail para o desenvolvedor"
+  }
+}

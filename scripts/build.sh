@@ -5,7 +5,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-ARQUIVOS=(manifest.json popup.html popup.js style.css gecko.svg icons)
+ARQUIVOS=(manifest.json popup.html popup.js lib.js style.css gecko.svg icons _locales)
 
 VERSAO=$(jq -r '.version' manifest.json)
 if [[ -z "$VERSAO" || "$VERSAO" == "null" ]]; then

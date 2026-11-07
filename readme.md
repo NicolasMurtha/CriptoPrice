@@ -1,10 +1,11 @@
 # 💸 CriptoPrice
 
 ![Status](https://img.shields.io/badge/status-working-brightgreen)
-![Versão](https://img.shields.io/badge/versão-1.2.0-blue)
+![Versão](https://img.shields.io/badge/versão-2.0.0-blue)
 ![Manifest](https://img.shields.io/badge/manifest-v3-orange)
+![Permissões](https://img.shields.io/badge/permissões-nenhuma-success)
 
-Uma extensão leve de navegador que mostra o preço e a variação em 24h do **Bitcoin**, **Ethereum**, **Solana** e **Tether (USDT)** em **BRL** ou **USD**, usando a API pública da [CoinGecko](https://www.coingecko.com/).
+Uma extensão leve de navegador que mostra a cotação das principais criptomoedas em **BRL** ou **USD**, com variação em 24h e gráfico dos últimos 7 dias, usando a API pública da [CoinGecko](https://www.coingecko.com/).
 
 🚀 Disponível na [Chrome Web Store](https://chromewebstore.google.com/detail/criptoprice/jbagdmhabgekcnichjjpbfneicoabjmh).
 
@@ -12,24 +13,28 @@ Uma extensão leve de navegador que mostra o preço e a variação em 24h do **B
 
 ## ✨ Funcionalidades
 
-- 💰 Preço atual de BTC, ETH, SOL e USDT
+- 🪙 Ícone, nome e preço de cada moeda
+- 🧩 Escolha quais moedas aparecem entre 15 opções (BTC, ETH, USDT, BNB, SOL, XRP, USDC, ADA, DOGE, TRX, AVAX, LINK, DOT, LTC e XLM)
 - 📈 Variação em 24h, em verde (alta) ou vermelho (baixa)
-- 🔄 Botão para atualizar os preços na hora
-- ⏱️ Cache de 60 segundos: reabrir o popup logo em seguida não gasta requisições
-- 🇧🇷 / 🇺🇸 Alternância entre **BRL** e **USD** com o botão ↔️
-- 💾 A moeda escolhida fica salva para a próxima vez
-- 🔢 Valores formatados no padrão de cada moeda (`R$ 543.210,50` / `$98,765.40`)
-- ⚠️ Mensagem clara quando a API está fora do ar, sem internet ou com limite de requisições atingido; se houver preços salvos, eles continuam na tela
+- 📉 Mini gráfico dos últimos 7 dias
+- 🇧🇷 / 🇺🇸 Alternância entre **BRL** e **USD**; a escolha fica salva
+- 🔄 Botão para atualizar os preços (com intervalo mínimo de 15 s para não estourar o limite da API)
+- ⏱️ Cache de 60 segundos por moeda: reabrir o popup logo em seguida não gasta requisições
+- 🌙 Modo escuro automático, seguindo o tema do sistema
+- 🌐 Interface em português e inglês, conforme o idioma do navegador
+- ⚠️ Mensagem clara quando a API falha; se houver preços salvos, eles continuam na tela com data e hora
+- ✉️ Botão de contato com o desenvolvedor
 - 🔒 Nenhuma permissão solicitada ao navegador
 
 ---
 
 ## 🛠️ Tecnologias
 
-- **JavaScript** puro (sem dependências nem build)
+- **JavaScript** puro com módulos ES (sem dependências nem build)
 - **HTML5** + **CSS3**
 - **API pública da CoinGecko** (sem chave)
-- **Manifest V3** do Chrome
+- **Manifest V3** do Chrome, com `chrome.i18n` para os idiomas
+- Ícones das moedas: [cryptocurrency-icons](https://github.com/spothq/cryptocurrency-icons) (CC0)
 
 ---
 
@@ -47,6 +52,8 @@ Uma extensão leve de navegador que mostra o preço e a variação em 24h do **B
 
 Depois de alterar algum arquivo, clique no ícone de recarregar da extensão em `chrome://extensions` e reabra o popup.
 
+Para rodar os testes (Node.js 20+): `npm test`.
+
 Para gerar o pacote `.zip` da Chrome Web Store, rode `scripts/build.sh` (o arquivo vai para `dist/`) e envie-o pelo [Developer Dashboard](https://chrome.google.com/webstore/devconsole).
 
 ---
@@ -54,9 +61,10 @@ Para gerar o pacote `.zip` da Chrome Web Store, rode `scripts/build.sh` (o arqui
 ## 🚀 Como usar
 
 1. Clique no ícone do CriptoPrice na barra do navegador
-2. Veja os preços e a variação em 24h
+2. Veja os preços, a variação em 24h e o gráfico de 7 dias
 3. Use o botão ↔️ para alternar entre **BRL** e **USD**
-4. Use o botão 🔄 para buscar os preços novamente
+4. Use o botão ⚙️ para escolher as moedas
+5. Use o botão 🔄 para buscar os preços novamente
 
 ---
 
@@ -66,11 +74,13 @@ Para gerar o pacote `.zip` da Chrome Web Store, rode `scripts/build.sh` (o arqui
 CriptoPrice/
 ├── manifest.json   # Configuração da extensão (Manifest V3)
 ├── popup.html      # Interface do popup
-├── popup.js        # Busca dos preços, cache, formatação e troca de moeda
-├── style.css       # Estilos do popup
-├── icon.png        # Ícone original (256×256)
-├── icons/          # Ícones redimensionados (16, 32, 48, 128 px)
+├── popup.js        # Interface: busca, cache, renderização e eventos
+├── lib.js          # Funções puras (formatação, cache, gráfico), testadas
+├── style.css       # Estilos, incluindo o modo escuro
+├── _locales/       # Textos em português e inglês
+├── icons/          # Ícones da extensão e icons/coins/ com os das moedas
 ├── gecko.svg       # Logo da CoinGecko (crédito obrigatório)
+├── tests/          # Testes (node --test)
 ├── scripts/        # build.sh: gera o .zip para a Chrome Web Store
 └── LICENSE
 ```
@@ -79,19 +89,32 @@ CriptoPrice/
 
 ## 🐸 API usada
 
-[CoinGecko](https://www.coingecko.com/en/api): plano público, sem autenticação. A extensão faz **uma única requisição** para todas as moedas:
+[CoinGecko](https://www.coingecko.com/en/api): plano público, sem autenticação. A extensão faz **uma única requisição** por moeda de exibição, com todas as criptomoedas escolhidas:
 
 ```
-GET https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,tether&vs_currencies=brl,usd&include_24hr_change=true
+GET https://api.coingecko.com/api/v3/coins/markets?vs_currency=brl&ids=bitcoin,ethereum,solana,tether&sparkline=true&price_change_percentage=24h
 ```
 
 A resposta fica em cache por 60 segundos (no `localStorage` da extensão). Dentro desse prazo, abrir o popup não faz nova requisição; o botão 🔄 ignora o cache.
 
-O plano gratuito limita o número de requisições por minuto. Se o limite for atingido, a extensão mostra um aviso e basta tentar de novo em instantes.
+O plano gratuito limita o número de requisições por minuto. Se o limite for atingido, a extensão mostra um aviso e os últimos preços salvos.
 
 ---
 
 ## 📝 Changelog
+
+### 2.0.0
+- Ícone de cada moeda e escolha entre 15 criptomoedas
+- Mini gráfico de 7 dias
+- Modo escuro automático
+- Interface em português e inglês (USD como padrão fora do português)
+- Botão de contato
+- Intervalo mínimo de 15 s entre atualizações manuais
+- Valores abaixo de 1 com mais casas decimais (ex.: `$0.1594`)
+- Cor da variação segue o valor exibido (0,00% fica neutro)
+- Data na mensagem de "atualizado" quando os preços salvos não são de hoje
+- Cache separado por moeda e invalidado quando faltam criptomoedas escolhidas
+- Testes automatizados (`npm test`)
 
 ### 1.2.0
 - Novas moedas: Solana (SOL) e Tether (USDT)

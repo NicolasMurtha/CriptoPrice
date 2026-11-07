@@ -1,0 +1,9 @@
+{
+  "name": "criptoprice",
+  "private": true,
+  "type": "module",
+  "description": "Usado só para rodar os testes; a extensão não tem dependências.",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  }
+}

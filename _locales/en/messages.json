@@ -1,0 +1,86 @@
+{
+  "extName": {
+    "message": "CriptoPrice"
+  },
+  "extDescription": {
+    "message": "Bitcoin, Ethereum and other crypto prices in USD or BRL, with 24h change and a 7-day chart."
+  },
+  "btnRefresh": {
+    "message": "Refresh prices"
+  },
+  "btnCurrency": {
+    "message": "Switch currency"
+  },
+  "btnSettings": {
+    "message": "Choose coins"
+  },
+  "loading": {
+    "message": "Loading..."
+  },
+  "unavailable": {
+    "message": "Unavailable"
+  },
+  "change24h": {
+    "message": "24h change"
+  },
+  "trend7d": {
+    "message": "Last 7 days"
+  },
+  "updatedAt": {
+    "message": "Updated at $time$",
+    "placeholders": {
+      "time": {
+        "content": "$1"
+      }
+    }
+  },
+  "updatedAtDate": {
+    "message": "Updated on $date$ at $time$",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      },
+      "time": {
+        "content": "$2"
+      }
+    }
+  },
+  "errRateLimit": {
+    "message": "CoinGecko rate limit reached. Please try again shortly."
+  },
+  "errHttp": {
+    "message": "Error contacting CoinGecko (HTTP $status$).",
+    "placeholders": {
+      "status": {
+        "content": "$1"
+      }
+    }
+  },
+  "errNetwork": {
+    "message": "Can't reach CoinGecko. Check your internet connection."
+  },
+  "staleSuffix": {
+    "message": "Showing the last saved prices."
+  },
+  "waitRefresh": {
+    "message": "Wait a few seconds before refreshing again."
+  },
+  "settingsTitle": {
+    "message": "Choose your coins"
+  },
+  "settingsHint": {
+    "message": "Select at least one."
+  },
+  "settingsDone": {
+    "message": "Done"
+  },
+  "credit": {
+    "message": "Price data provided by"
+  },
+  "contact": {
+    "message": "Contact"
+  },
+  "contactTitle": {
+    "message": "Email the developer"
+  }
+}

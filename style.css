@@ -1,3 +1,41 @@
+:root {
+  --fundo: #ffffff;
+  --cartao: #f2f3f5;
+  --cartao-hover: #e8eaed;
+  --texto: #1f2328;
+  --texto-suave: #5a6570;
+  --botao: #eceef1;
+  --botao-hover: #dfe2e6;
+  --alta: #1e8e3e;
+  --baixa: #d93025;
+  --neutro: #8a939c;
+  --erro-fundo: #fdecea;
+  --erro-texto: #b3261e;
+  --foco: #4a90e2;
+  --primario: #1f6feb;
+  --primario-texto: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: #1e1f22;
+    --cartao: #2b2d31;
+    --cartao-hover: #34363c;
+    --texto: #e8eaed;
+    --texto-suave: #9aa0a6;
+    --botao: #34363c;
+    --botao-hover: #40434a;
+    --alta: #4cc06a;
+    --baixa: #f2726a;
+    --neutro: #80868b;
+    --erro-fundo: #3d2321;
+    --erro-texto: #f6aea9;
+    --foco: #8ab4f8;
+    --primario: #4c8df6;
+    --primario-texto: #0b1220;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,21 +43,28 @@
 }
 
 body {
-  background-color: #ffffff;
-  font-family: Arial, sans-serif;
-  padding: 15px;
-  width: 260px;
+  background-color: var(--fundo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  padding: 14px;
+  width: 320px;
 }
+
+ul {
+  list-style: none;
+}
+
+/* ---------- cabeçalho ---------- */
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .header h1 {
-  font-size: 20px;
+  font-size: 19px;
 }
 
 .acoes {
@@ -28,7 +73,8 @@ body {
 }
 
 .botao {
-  background-color: #eee;
+  background-color: var(--botao);
+  color: var(--texto);
   border: none;
   border-radius: 8px;
   padding: 6px 8px;
@@ -36,19 +82,28 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
+  font: inherit;
 }
 
-.botao:hover:not(:disabled) {
-  background-color: #e0e0e0;
+.botao svg {
+  fill: currentColor;
+}
+
+.botao:hover:not(:disabled),
+.botao.ativo {
+  background-color: var(--botao-hover);
 }
 
 .botao:disabled {
   cursor: default;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
-.botao:focus-visible {
-  outline: 2px solid #4a90e2;
+.botao:focus-visible,
+.link-contato:focus-visible,
+.credito:focus-visible,
+.opcao input:focus-visible {
+  outline: 2px solid var(--foco);
   outline-offset: 2px;
 }
 
@@ -67,72 +122,225 @@ body {
   font-weight: 600;
 }
 
-div.crypto {
+/* ---------- lista de preços ---------- */
+
+.lista {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f0f0f0;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 8px;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
-.crypto-info h3 {
-  font-size: 15px;
+.moeda {
+  display: grid;
+  grid-template-columns: 28px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--cartao);
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+
+.icone {
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.nome {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nome-moeda {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .simbolo {
   font-size: 11px;
-  color: #5a6570;
+  color: var(--texto-suave);
 }
 
-.crypto-valores {
-  text-align: right;
+.spark {
+  display: block;
+}
+
+.spark path {
+  fill: none;
+  stroke: var(--neutro);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.spark.alta path {
+  stroke: var(--alta);
+}
+
+.spark.baixa path {
+  stroke: var(--baixa);
+}
+
+.valores {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 84px;
 }
 
 .preco {
   font-size: 14px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .variacao {
   font-size: 11px;
-  color: #5a6570;
+  color: var(--neutro);
 }
 
 .variacao.alta {
-  color: #1e8e3e;
+  color: var(--alta);
 }
 
 .variacao.baixa {
-  color: #d93025;
+  color: var(--baixa);
 }
 
 .erro {
-  background-color: #fdecea;
-  color: #b3261e;
+  background-color: var(--erro-fundo);
+  color: var(--erro-texto);
   font-size: 12px;
   padding: 8px 10px;
   border-radius: 8px;
-  margin-bottom: 8px;
+  margin-top: 8px;
 }
 
 .atualizado {
   font-size: 11px;
-  color: #5a6570;
-  margin-bottom: 4px;
+  color: var(--texto-suave);
+  margin-top: 8px;
 }
 
-.coingecko-credit {
+/* ---------- escolha de moedas ---------- */
+
+.config h2 {
+  font-size: 15px;
+}
+
+.dica {
+  font-size: 12px;
+  color: var(--texto-suave);
+  margin: 2px 0 8px;
+}
+
+.dica.destaque {
+  color: var(--erro-texto);
+  font-weight: 600;
+}
+
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 340px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.opcao {
+  display: grid;
+  grid-template-columns: auto 22px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.opcao:hover {
+  background-color: var(--cartao);
+}
+
+.opcao .icone {
+  width: 22px;
+  height: 22px;
+}
+
+.opcao input {
+  accent-color: var(--primario);
+  width: 15px;
+  height: 15px;
+}
+
+.botao-primario {
+  width: 100%;
+  justify-content: center;
+  background-color: var(--primario);
+  color: var(--primario-texto);
+  font-weight: 600;
+  padding: 8px;
+}
+
+.botao-primario:hover:not(:disabled) {
+  background-color: var(--primario);
+  filter: brightness(1.08);
+}
+
+/* ---------- rodapé ---------- */
+
+.rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--cartao);
+}
+
+.credito {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #5a6570;
-  padding-top: 5px;
+  gap: 5px;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--texto-suave);
+  text-decoration: none;
 }
 
-.coingecko-credit .logo {
-  height: 24px;
+.logo-gecko {
+  height: 16px;
   display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* O logo da CoinGecko tem texto escuro: fundo claro para continuar legível. */
+  .logo-gecko {
+    background-color: #ffffff;
+    border-radius: 4px;
+    padding: 2px 3px;
+    box-sizing: content-box;
+  }
+}
+
+.link-contato {
+  background: none;
+  border: none;
+  color: var(--primario);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.link-contato:hover {
+  text-decoration: underline;
 }
