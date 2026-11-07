@@ -82,6 +82,7 @@ CriptoPrice/
 ├── gecko.svg       # Logo da CoinGecko (crédito obrigatório)
 ├── tests/          # Testes (node --test)
 ├── scripts/        # build.sh: gera o .zip para a Chrome Web Store
+├── store/          # Textos e capturas de tela da página na Chrome Web Store
 └── LICENSE
 ```
 
